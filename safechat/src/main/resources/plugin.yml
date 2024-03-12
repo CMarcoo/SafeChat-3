@@ -1,10 +1,10 @@
 name: "SafeChat"
 version: ${version}
-main: studio.thevipershow.safechat.SafeChat
+main: 'top.cmarco.safechat.SafeChat'
 load: POSTWORLD
-authors: [ TheViperShow, Jochyoua ]
+authors: [ CMarco , Jochyoua ]
 softdepend: [ Vault ]
-api-version: 1.13
+api-version: "1.13"
 description: "Keep your chat safe!"
 permissions:
   safechat.commands.help:

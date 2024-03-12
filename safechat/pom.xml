@@ -2,13 +2,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>studio.thevipershow</groupId>
+    <groupId>top.cmarco</groupId>
     <artifactId>safechat</artifactId>
-    <version>2.1.8-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -40,8 +40,7 @@
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>1.8</version>
-            <scope>compile</scope>
+            <version>3.0.2</version>
         </dependency>
         <!-- Vault (Minecraft server abstractions) -->
         <dependency>
@@ -54,7 +53,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.16.4-R0.1-SNAPSHOT</version>
+            <version>1.20.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <!-- String similarity algorithms -->
@@ -80,51 +79,50 @@
         </dependency>
         <!-- Hibernate (ORM) -->
         <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.4.27.Final</version>
-            <scope>compile</scope>
+            <version>6.4.4.Final</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-hikaricp -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-hikaricp</artifactId>
-            <version>5.4.27.Final</version>
+            <version>6.4.4.Final</version>
             <scope>compile</scope>
         </dependency>
         <!-- PostgreSQL Driver -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.25</version>
+            <version>42.7.2</version>
             <scope>compile</scope>
         </dependency>
         <!-- MariaDB Driver -->
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
-            <version>2.7.1</version>
+            <version>3.3.3</version>
             <scope>compile</scope>
         </dependency>
         <!-- H2 DB Engine -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>2.1.210</version>
+            <version>2.2.224</version>
             <scope>compile</scope>
         </dependency>
         <!-- HyperSQL DB Engine -->
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
-            <version>2.5.1</version>
+            <version>2.7.2</version>
             <scope>compile</scope>
         </dependency>
         <!-- Microsoft SQLServer Driver -->
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
-            <version>9.1.1.jre8-preview</version>
+            <version>12.6.1.jre8</version>
             <scope>compile</scope>
         </dependency>
         <!-- HikariCP (Connection Pooling) -->
@@ -137,25 +135,19 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.30</version>
+            <version>2.0.12</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.30</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.gwenn</groupId>
-            <artifactId>sqlite-dialect</artifactId>
-            <version>-c3cee1f223-1</version>
-            <scope>compile</scope>
+            <version>2.0.12</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.ibm.db2/jcc -->
         <dependency>
             <groupId>com.ibm.db2</groupId>
             <artifactId>jcc</artifactId>
-            <version>11.5.5.0</version>
+            <version>11.5.9.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -167,7 +159,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.8</version>
+                <version>3.6.1</version>
                 <executions>
                     <execution>
                         <id>unpack-dependencies</id>
@@ -189,10 +181,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.11.0</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>17</source>
+                    <target>17</target>
                     <compilerArgs>
                         <arg>-parameters</arg>
                     </compilerArgs>
@@ -201,7 +193,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.5.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -223,104 +215,103 @@
                             <relocations>
                                 <relocation>
                                     <pattern>org.bstats</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.bstats
-                                    </shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.bstats</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>studio.thevipershow.vtc</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.vtc</shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.vtc</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.antlr</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.antlr</shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.antlr</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.checkerframework</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.checkerframework</shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.checkerframework</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.dom4j</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.dom4j</shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.dom4j</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.hsqldb</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.hsqldb</shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.hsqldb</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.jvnet</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.jvnet</shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.jvnet</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.mariadb</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.mariadb</shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.mariadb</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.slf4j</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.sl4fj</shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.sl4fj</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.tomlj</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.tomlj</shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.tomlj</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>net.bytebuddy</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.bytebuddy</shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.bytebuddy</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>net.jcip</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.jcip</shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.jcip</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>mssql</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.mssql</shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.mssql</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>microsoft.sql</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.microsoft.sql</shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.microsoft.sql</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>javassist</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.javassist</shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.javassist</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>info.debatty.java.stringsimilarity</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.stringsimilarity</shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.stringsimilarity</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.fasterxml.classmate</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.fasterxml</shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.fasterxml</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.microsoft.sqlserver.jdbc</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.microsoft.sqlserver.jdbc</shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.microsoft.sqlserver.jdbc</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.sun</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.com.sun</shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.com.sun</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>antlr</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.antlr</shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.antlr</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.h2</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.org.h2</shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.org.h2</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.postgresql</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.org.postgresql</shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.org.postgresql</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.jboss</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.org.jboss</shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.org.jboss</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>javax.persistence</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.javax.persistence</shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.javax.persistence</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.ibm</pattern>
-                                    <shadedPattern>studio.thevipershow.safechat.libs.com.ibm</shadedPattern>
+                                    <shadedPattern>top.cmarco.safechat.libs.com.ibm</shadedPattern>
                                 </relocation>
                             </relocations>
                             <createDependencyReducedPom>false</createDependencyReducedPom>

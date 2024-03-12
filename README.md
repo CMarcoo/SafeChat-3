@@ -1,5 +1,5 @@
 
-# SafeChatX ![GitHub](https://img.shields.io/github/license/Jochyoua/SafeChatX?style=plastic) ![GitHub last commit](https://img.shields.io/github/last-commit/Jochyoua/SafeChatX?style=plastic) ![swag](https://img.shields.io/badge/swag-yes-red)
+# SafeChat-3 ![GitHub](https://img.shields.io/github/license/CMarcoo/SafeChat-3?style=plastic) ![GitHub last commit](https://img.shields.io/github/last-commit/CMarcoo/SafeChat-3?style=plastic) ![swag](https://img.shields.io/badge/swag-yes-red)
 
 SafeChatX is a chat moderation plugin built to help keep your server's chat in check.\
 All contributions are very much appreciated!\
@@ -7,18 +7,18 @@ All contributions are very much appreciated!\
 
 ## Index table
 
-* [SafeChat locales](https://github.com/Jochyoua/SafeChatX/#safechat-locales)
-* [SafeChat commands](https://github.com/Jochyoua/SafeChatX/#safechat-commands)
-* [SafeChat configurations](https://github.com/Jochyoua/SafeChatX/#safechat-configurations)
-  * [address-whitelist-toml](https://github.com/Jochyoua/SafeChatX/#address-whitelisttoml)
-  * [database-settings.toml](https://github.com/Jochyoua/SafeChatX/#database-settingstoml)
-  * [check-settings.toml](https://github.com/Jochyoua/SafeChatX/#check-settingstoml)
-  * [words-blacklist.toml](https://github.com/Jochyoua/SafeChatX/#words-blacklisttoml)
-  * [messages.toml](https://github.com/Jochyoua/SafeChatX/#messagestoml)
-* [SafeChat database](https://github.com/Jochyoua/SafeChatX/#safechat-database)
-* [SafeChat API](https://github.com/Jochyoua/SafeChatX/#safechat-api)
-  * [SafeChat Events](https://github.com/Jochyoua/SafeChatX/#safechat-events)
-* [SafeChat Annotations API](https://github.com/Jochyoua/SafeChatX/#annotations-api)
+* [SafeChat locales](https://github.com/CMarcoo/SafeChat-3/#safechat-locales)
+* [SafeChat commands](https://github.com/CMarcoo/SafeChat-3/#safechat-commands)
+* [SafeChat configurations](https://github.com/CMarcoo/SafeChat-3/#safechat-configurations)
+  * [address-whitelist-toml](https://github.com/CMarcoo/SafeChat-3/#address-whitelisttoml)
+  * [database-settings.toml](https://github.com/CMarcoo/SafeChat-3/#database-settingstoml)
+  * [check-settings.toml](https://github.com/CMarcoo/SafeChat-3/#check-settingstoml)
+  * [words-blacklist.toml](https://github.com/CMarcoo/SafeChat-3/#words-blacklisttoml)
+  * [messages.toml](https://github.com/CMarcoo/SafeChat-3/#messagestoml)
+* [SafeChat database](https://github.com/CMarcoo/SafeChat-3/#safechat-database)
+* [SafeChat API](https://github.com/CMarcoo/SafeChat-3/#safechat-api)
+  * [SafeChat Events](https://github.com/CMarcoo/SafeChat-3/#safechat-events)
+* [SafeChat Annotations API](https://github.com/CMarcoo/SafeChat-3/#annotations-api)
 ***
 
 ### SafeChat locales
@@ -26,7 +26,7 @@ All contributions are very much appreciated!\
 SafeChat has locales for you to edit to your liking, every message a player sees from SafeChat may be modified.\
 We plan on adding more language locales in the future for you to choose from.\
 To edit a locale message, all you need to do is get the latest version of the locale from out github repo\
-(https://github.com/Jochyoua/SafeChatX/tree/master/safechat/src/main/resources/) and choose a file ending in .properties\
+(https://github.com/CMarcoo/SafeChat-3/tree/master/safechat/src/main/resources/) and choose a file ending in .properties\
 After you choose your file, drop it into the SafeChat directory and modify the messages there.\
 Reload the plugin with `/safechat reload` and it will load right up!
 ***
@@ -124,7 +124,7 @@ chat event is wrapped into a
 "ChatData" object which contains the player, and the message objects.<br>
 All checks are based on the "Check" interface. The check interface is a simple structure that allows you to define your
 own chat control structure. In this API you will find most of the necessary classes and abstractions inside the
-"studio.thevipershow.safechat.api" package.
+"stop.cmarco.safechat.api" package.
 
 You can add the SafeChat repository this way if you're using Maven:
 
@@ -141,9 +141,9 @@ Step 2: add **SafeChatX** as provided dependency
 
 ```xml
 <dependency>
-    <groupId>com.github.TheViperShow</groupId>
-    <artifactId>SafeChatX</artifactId>
-    <version>2.1.0-SNAPSHOT</version>
+    <groupId>top.cmarco.safechat</groupId>
+    <artifactId>SafeChat-3</artifactId>
+    <version>3.0.0-SNAPSHOT</version>
     <scope>provided</scope> <!-- IMPORTANT SETTING -->
 </dependency>
 ```
@@ -390,7 +390,7 @@ public final class MessageTooLongCheck extends ChatCheck {
 ### SafeChat Events
 
 This plugin also provides different Bukkit events that allow you to easily listen and interact with safechat using the
-Bukkit API. All of the checks are stored inside the `studio.thevipershow.safechat.api.events` package.
+Bukkit API. All of the checks are stored inside the `top.cmarco.safechat.api.events` package.
 
 The currently available checks are:
 
