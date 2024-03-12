@@ -4,6 +4,19 @@ main: 'top.cmarco.safechat.SafeChat'
 load: POSTWORLD
 authors: [ CMarco , Jochyoua ]
 softdepend: [ Vault ]
+libraries:
+  - "org.postgresql:postgresql:42.7.2"
+  - "org.hibernate:hibernate-core:5.6.15.Final"
+  - "org.hibernate:hibernate-hikaricp:5.6.15.Final"
+  - "org.mariadb.jdbc:mariadb-java-client:3.3.3"
+  - "com.h2database:h2:2.2.224"
+  - "org.hsqldb:hsqldb:2.7.2"
+  - "com.microsoft.sqlserver:mssql-jdbc:12.6.1.jre11"
+  - "com.zaxxer:HikariCP:5.0.1"
+  - "org.slf4j:slf4j-api:2.0.12"
+  - "org.slf4j:slf4j-simple:2.0.12"
+  - "com.ibm.db2:jcc:11.5.9.0"
+  - "info.debatty:java-string-similarity:2.0.0"
 api-version: "1.13"
 description: "Keep your chat safe!"
 permissions:

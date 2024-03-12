@@ -1,3 +1,22 @@
+
+/*
+ * {{ SafeChat }}
+ * Copyright (C) 2024 CMarco
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package top.cmarco.safechat.persistence;
 
 import com.zaxxer.hikari.HikariDataSource;
@@ -5,7 +24,6 @@ import org.hibernate.cfg.Environment;
 import org.hibernate.dialect.*;
 import org.hibernate.hikaricp.internal.HikariCPConnectionProvider;
 import org.jetbrains.annotations.NotNull;
-import org.sqlite.hibernate.dialect.SQLiteDialect;
 import top.cmarco.safechat.config.database.DatabaseSection;
 import top.cmarco.safechat.config.database.DatabaseConfig;
 
@@ -21,35 +39,31 @@ public enum HibernateSQLMapping {
     /**
      * PostgreSQL Server type.
      */
-    POSTGRESQL("postgresql", "top.cmarco.safechat.libs.org.postgresql.Driver", generateUrl("postgresql"), PostgreSQLDialect.class, false),
+    POSTGRESQL("postgresql", "org.postgresql.Driver", generateUrl("postgresql"), PostgreSQLDialect.class, false),
     /**
      * MariaDB Server type.
      */
-    MARIADB("mariadb", "top.cmarco.safechat.libs.mariadb.jdbc.Driver", generateUrl("mariadb"), MariaDBDialect.class, false),
+    MARIADB("mariadb", "mariadb.jdbc.Driver", generateUrl("mariadb"), MariaDBDialect.class, false),
     /**
      * H2 Engine Type.
      */
-    H2("h2", "top.cmarco.safechat.libs.org.h2.Driver", generateFileUrl("h2"), H2Dialect.class, true),
+    H2("h2", "org.h2.Driver", generateFileUrl("h2"), H2Dialect.class, true),
     /**
      * CockroachDB Server type.
      */
-    COCKROACHDB("cockroachdb", "top.cmarco.safechat.libs.org.postgresql.Driver", generateUrl("postgresql"), CockroachDB201Dialect.class, false),
+    COCKROACHDB("cockroachdb", "org.postgresql.Driver", generateUrl("postgresql"), CockroachDB201Dialect.class, false),
     /**
      * HyperSQL Engine type.
      */
-    HYPERSQL("hsql", "top.cmarco.safechat.libs.hsqldb.jdbc.JDBCDriver", generateFileUrl("hsqldb"), HSQLDialect.class, true),
+    HYPERSQL("hsql", "hsqldb.jdbc.JDBCDriver", generateFileUrl("hsqldb"), HSQLDialect.class, true),
     /**
      * Microsoft's SQLServer type.
      */
-    SQLSERVER("sqlserver", "top.cmarco.safechat.libs.microsoft.sqlserver.jdbc.SQLServerDriver", generateUrl("sqlserver"), SQLServerDialect.class, false),
+    SQLSERVER("sqlserver", "microsoft.sqlserver.jdbc.SQLServerDriver", generateUrl("sqlserver"), SQLServerDialect.class, false),
     /**
      * IBM DB2 Server type.
      */
-    DB2("db2", "top.cmarco.safechat.libs.com.ibm.db2.jcc.DB2Driver", generateFileUrl("db2"), DB2Dialect.class, false),
-    /**
-     * SQLite (TESTING)
-     */
-    SQLITE("sqlite", "org.sqlite.JDBC", generateFileUrl("sqlite"), SQLiteDialect.class, true);
+    DB2("db2", "com.ibm.db2.jcc.DB2Driver", generateFileUrl("db2"), DB2Dialect.class, false);
 
     public static final String DB_TYPE_PLACEHOLDER = "{TYPE}";
     public static final String STD_JDBC_URL = "jdbc:" + DB_TYPE_PLACEHOLDER + "://%s:%d/%s";
@@ -110,6 +124,7 @@ public enum HibernateSQLMapping {
         properties.put("hibernate.hikari.dataSource.cacheServerConfiguration", "true");
         properties.put(Environment.HBM2DDL_AUTO, "update");
         properties.put(Environment.SHOW_SQL, "false");
+        
         return properties;
     }
 

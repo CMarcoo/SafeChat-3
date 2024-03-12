@@ -1,4 +1,3 @@
-
 # SafeChat-3 ![GitHub](https://img.shields.io/github/license/CMarcoo/SafeChat-3?style=plastic) ![GitHub last commit](https://img.shields.io/github/last-commit/CMarcoo/SafeChat-3?style=plastic) ![swag](https://img.shields.io/badge/swag-yes-red)
 
 SafeChatX is a chat moderation plugin built to help keep your server's chat in check.\
