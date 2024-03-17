@@ -135,7 +135,7 @@ public final class SafeChat extends JavaPlugin {
     private void setupHibernate() {
         ClassLoader old = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(this.getClassLoader());
-        safeChatHibernate = new SafeChatHibernate(Objects.requireNonNull(configData.getConfig(Configurations.DATABASE_SETTINGS)), this);
+        safeChatHibernate = new SafeChatHibernate(Objects.requireNonNull(configData.getConfig(Configurations.DATABASE_SETTINGS)), this, this.getClassLoader());
         safeChatHibernate.setupHibernateSQLMapping();
         safeChatHibernate.setupSessionFactory();
         safeChatHibernate.setupPlayerDataManager();
@@ -161,6 +161,14 @@ public final class SafeChat extends JavaPlugin {
         setupListeners();
     }
 
+    @Override
+    public void onDisable() {
+        if (safeChatHibernate != null)
+            safeChatHibernate.shutdown();
+
+        unregisterCommands();
+    }
+
     private void unregisterCommands() {
         try {
             final CommandMap map = SafeChatUtils.getCommandMap();
@@ -170,12 +178,6 @@ public final class SafeChat extends JavaPlugin {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             getLogger().warning("Could not get command map!");
         }
-    }
-
-    @Override
-    public void onDisable() {
-        safeChatHibernate.shutdown();
-        unregisterCommands();
     }
 
     @NotNull

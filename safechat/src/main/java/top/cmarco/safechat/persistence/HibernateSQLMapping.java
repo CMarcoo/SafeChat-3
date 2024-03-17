@@ -20,6 +20,7 @@
 package top.cmarco.safechat.persistence;
 
 import com.zaxxer.hikari.HikariDataSource;
+import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.dialect.*;
 import org.hibernate.hikaricp.internal.HikariCPConnectionProvider;
@@ -51,7 +52,7 @@ public enum HibernateSQLMapping {
     /**
      * CockroachDB Server type.
      */
-    COCKROACHDB("cockroachdb", "org.postgresql.Driver", generateUrl("postgresql"), CockroachDB201Dialect.class, false),
+    COCKROACHDB("cockroachdb", "org.postgresql.Driver", generateUrl("postgresql"), CockroachDialect.class, false),
     /**
      * HyperSQL Engine type.
      */
@@ -106,16 +107,19 @@ public enum HibernateSQLMapping {
         }
     }
 
-    public Map<String, String> generateProperties(@NotNull DatabaseConfig dbConfig) {
-        Map<String, String> properties = new HashMap<>();
+    public Map<String, Object> generateProperties(@NotNull DatabaseConfig dbConfig) {
+        final Map<String, Object> properties = new HashMap<>();
+
         properties.put("hibernate.connection.dataSourceClassname", HikariCPConnectionProvider.class.getName());
         properties.put("hibernate.hikari.jdbcUrl", generateAppropriateUrl(this, dbConfig));
+
         if (!isFileBased()) {
             properties.put("hibernate.hikari.username", dbConfig.getConfigValue(DatabaseSection.USERNAME));
             properties.put("hibernate.hikari.password", dbConfig.getConfigValue(DatabaseSection.PASSWORD));
         }
+
         properties.put("hibernate.dataSourceClassName", HikariDataSource.class.getName());
-        properties.put(Environment.DRIVER, driverClassName);
+        properties.put(Environment.JAKARTA_JDBC_DRIVER, driverClassName);
         properties.put("hibernate.hikari.dataSource.cachePrepStmts", "true");
         properties.put("hibernate.hikari.dataSource.prepStmtCacheSize", "256");
         properties.put("hibernate.hikari.dataSource.useServerPrepStmts", "true");
@@ -124,7 +128,8 @@ public enum HibernateSQLMapping {
         properties.put("hibernate.hikari.dataSource.cacheServerConfiguration", "true");
         properties.put(Environment.HBM2DDL_AUTO, "update");
         properties.put(Environment.SHOW_SQL, "false");
-        
+        // properties.put("hibernate.")
+
         return properties;
     }
 

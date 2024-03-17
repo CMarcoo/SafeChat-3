@@ -19,21 +19,21 @@
 
 package top.cmarco.safechat.persistence.mappers;
 
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
 import org.bukkit.entity.Player;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import top.cmarco.safechat.SafeChat;
 import top.cmarco.safechat.persistence.types.PlayerData;
 
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public final class PlayerDataManager {
 
@@ -54,20 +54,22 @@ public final class PlayerDataManager {
         }
     }
 
-    public void addPlayerData(@NotNull UUID uuid, @NotNull String username) {
-        Transaction transaction = null;
-        try (final Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
-            final PlayerData playerData = new PlayerData();
-            playerData.setUuid(uuid.toString());
-            playerData.setName(username);
-            session.save(playerData);
-        } catch (HibernateException e) {
-            if (transaction != null) {
-                transaction.rollback();
+    public CompletableFuture<Void> addPlayerData(@NotNull UUID uuid, @NotNull String username) {
+        return CompletableFuture.runAsync(() -> {
+            Transaction transaction = null;
+            try (final Session session = sessionFactory.openSession()) {
+                transaction = session.beginTransaction();
+                final PlayerData playerData = new PlayerData();
+                playerData.setUuid(uuid.toString());
+                playerData.setName(username);
+                session.save(playerData);
+            } catch (HibernateException e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+                safeChat.getLogger().warning(e.getLocalizedMessage());
             }
-            e.printStackTrace();
-        }
+        });
     }
 
     public void addPlayerData(@NotNull Player player) {
@@ -98,65 +100,73 @@ public final class PlayerDataManager {
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            safeChat.getLogger().warning(e.getLocalizedMessage());
         }
     }
 
-    @Nullable
-    public PlayerData getPlayerData(@NotNull Player player) {
+    @NotNull
+    public CompletableFuture<PlayerData> getPlayerData(@NotNull Player player) {
+        CompletableFuture<PlayerData> future = new CompletableFuture<>();
 
-        final UUID uuid = player.getUniqueId();
-        Transaction transaction = null;
+        future.completeAsync(() -> {
+            final UUID uuid = player.getUniqueId();
+            Transaction transaction = null;
 
-        try (final Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
+            try (final Session session = sessionFactory.openSession()) {
+                transaction = session.beginTransaction();
 
+                final TypedQuery<PlayerData> query = session.createQuery("SELECT a FROM PlayerData a LEFT JOIN FETCH a.flagsMap WHERE a.uuid= :uuid", PlayerData.class);
+                query.setParameter("uuid", uuid.toString());
 
-            final TypedQuery<PlayerData> query = session.createQuery("SELECT a FROM PlayerData a LEFT JOIN FETCH a.flagsMap WHERE a.uuid= :uuid", PlayerData.class);
-            query.setParameter("uuid", uuid.toString());
+                final PlayerData resultData = query.getSingleResult();
 
-            final PlayerData resultData = query.getSingleResult();
+                transaction.commit();
 
-            transaction.commit();
+                return resultData;
+            } catch (NoResultException ignored) {
 
-            return resultData;
-        } catch (NoResultException noResultException) {
-            return null;
-        } catch (HibernateException e) {
-            if (transaction != null) {
-                transaction.rollback();
+            } catch (HibernateException e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+                safeChat.getLogger().warning(e.getLocalizedMessage());
             }
-            e.printStackTrace();
-        }
-        return null;
+            return null;
+        });
+
+        return future;
     }
 
-    @Nullable
-    public PlayerData getPlayerData(@NotNull String username) {
+    @NotNull
+    public CompletableFuture<PlayerData> getPlayerData(@NotNull String username) {
+        CompletableFuture<PlayerData> future = new CompletableFuture<>();
 
-        Transaction transaction = null;
-        try (final Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
+        future.completeAsync(() -> {
+            Transaction transaction = null;
+            try (final Session session = sessionFactory.openSession()) {
+                transaction = session.beginTransaction();
 
-            final TypedQuery<PlayerData> query = session.createQuery("SELECT a FROM PlayerData a LEFT JOIN FETCH a.flagsMap WHERE a.name= :name", PlayerData.class);
-            query.setParameter("name", username);
+                final TypedQuery<PlayerData> query = session.createQuery("SELECT a FROM PlayerData a LEFT JOIN FETCH a.flagsMap WHERE a.name= :name", PlayerData.class);
+                query.setParameter("name", username);
 
 
-            final PlayerData resultData = query.getSingleResult();
+                final PlayerData resultData = query.getSingleResult();
 
-            transaction.commit();
+                transaction.commit();
 
-            return resultData;
-        } catch (NoResultException noResultException) {
-            return null;
-        } catch (HibernateException exception) {
-            if (transaction != null) {
-                transaction.rollback();
+                return resultData;
+            } catch (NoResultException noResultException) {
+                return null;
+            } catch (HibernateException exception) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+                safeChat.getLogger().warning(exception.getLocalizedMessage());
             }
-            exception.printStackTrace();
-        }
+            return null;
+        });
 
-        return null;
+        return future;
     }
 
     @NotNull

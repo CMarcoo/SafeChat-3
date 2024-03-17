@@ -62,9 +62,7 @@ public class SafeChatCommand extends Command {
 
     public static void onVersion(@NotNull CommandSender sender) {
         if (SafeChatUtils.permissionCheck("safechat.commands.version", sender)) {
-            sender.sendMessage(SafeChatUtils.color(getLocale().getString("version_command"))
-                    .replaceAll("(?i)\\{prefix}", getLocale().getString("prefix")).replaceAll("(?i)\\{version}", SafeChat.getPlugin(SafeChat.class).getDescription().getVersion())
-                    .replaceAll("(?i)\\{server_version}", Bukkit.getServer().getVersion()));
+            sender.sendMessage(SafeChatUtils.color(getLocale().getString("version_command")).replaceAll("(?i)\\{prefix}", getLocale().getString("prefix")).replaceAll("(?i)\\{version}", SafeChat.getPlugin(SafeChat.class).getDescription().getVersion()).replaceAll("(?i)\\{server_version}", Bukkit.getServer().getVersion()));
         }
     }
 
@@ -106,15 +104,22 @@ public class SafeChatCommand extends Command {
                 return;
             }
 
-            final PlayerData playerData = dataManager.getPlayerData(playerName);
-            if (playerData != null) {
-                int flagAmount;
-                Map<String, Integer> playerFlags = playerData.getFlagsMap();
-                flagAmount = playerFlags.getOrDefault(flagType, 0);
-                commandSender.sendMessage(SafeChatUtils.color(String.format(getLocale().getString("flag_information").replaceAll("(?i)\\{prefix}", getLocale().getString("prefix")), playerName, flagAmount, flagType)));
-            } else {
-                commandSender.sendMessage(SafeChatUtils.color(getLocale().getString("not_found_in_database").replaceAll("(?i)\\{prefix}", getLocale().getString("prefix"))));
-            }
+            dataManager.getPlayerData(playerName).whenComplete((playerData, err) -> {
+
+                if (err != null) {
+                    safeChat.getLogger().warning(err.getLocalizedMessage());
+                    return;
+                }
+
+                if (playerData != null) {
+                    int flagAmount;
+                    Map<String, Integer> playerFlags = playerData.getFlagsMap();
+                    flagAmount = playerFlags.getOrDefault(flagType, 0);
+                    commandSender.sendMessage(SafeChatUtils.color(String.format(getLocale().getString("flag_information").replaceAll("(?i)\\{prefix}", getLocale().getString("prefix")), playerName, flagAmount, flagType)));
+                } else {
+                    commandSender.sendMessage(SafeChatUtils.color(getLocale().getString("not_found_in_database").replaceAll("(?i)\\{prefix}", getLocale().getString("prefix"))));
+                }
+            });
         } else {
             commandSender.sendMessage(SafeChatUtils.color(String.format(getLocale().getString("check_does_not_exist").replaceAll("(?i)\\{prefix}", getLocale().getString("prefix")), flagType)));
         }
@@ -135,13 +140,21 @@ public class SafeChatCommand extends Command {
         if (dataManager == null) {
             return;
         }
-        final PlayerData playerData = dataManager.getPlayerData(playerName);
-        if (playerData != null) {
-            Map<String, Integer> playerFlags = playerData.getFlagsMap();
-            playerFlags.forEach((k, v) -> commandSender.sendMessage(SafeChatUtils.color(String.format(getLocale().getString("flag_information").replaceAll("(?i)\\{prefix}", getLocale().getString("prefix")), playerName, v, k))));
-        } else {
-            commandSender.sendMessage(SafeChatUtils.color(getLocale().getString("not_found_in_database").replaceAll("(?i)\\{prefix}", getLocale().getString("prefix"))));
-        }
+
+        dataManager.getPlayerData(playerName).whenComplete((playerData, err) -> {
+
+            if (err != null) {
+                safeChat.getLogger().warning(err.getLocalizedMessage());
+                return;
+            }
+
+            if (playerData != null) {
+                Map<String, Integer> playerFlags = playerData.getFlagsMap();
+                playerFlags.forEach((k, v) -> commandSender.sendMessage(SafeChatUtils.color(String.format(getLocale().getString("flag_information").replaceAll("(?i)\\{prefix}", getLocale().getString("prefix")), playerName, v, k))));
+            } else {
+                commandSender.sendMessage(SafeChatUtils.color(getLocale().getString("not_found_in_database").replaceAll("(?i)\\{prefix}", getLocale().getString("prefix"))));
+            }
+        });
     }
 
     public void withTwoArgs(@NotNull CommandSender commandSender, @NotNull final String[] args) {

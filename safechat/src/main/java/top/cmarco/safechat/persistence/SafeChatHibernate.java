@@ -21,8 +21,11 @@ import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.BootstrapServiceRegistryBuilder;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.boot.registry.internal.BootstrapServiceRegistryImpl;
+import org.hibernate.cfg.Configuration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.cmarco.safechat.SafeChat;
@@ -43,10 +46,12 @@ public final class SafeChatHibernate {
     private SessionFactory sessionFactory;
     private PlayerDataManager playerDataManager;
     private HibernateSQLMapping hibernateSQLMapping;
+    private final ClassLoader pluginClassLoader;
 
-    public SafeChatHibernate(@NotNull DatabaseConfig dbConfig, @NotNull SafeChat safeChat) {
+    public SafeChatHibernate(@NotNull DatabaseConfig dbConfig, @NotNull SafeChat safeChat, ClassLoader pluginClassLoader) {
         this.dbConfig = Objects.requireNonNull(dbConfig);
         this.safeChat = Objects.requireNonNull(safeChat);
+        this.pluginClassLoader = pluginClassLoader;
     }
 
     /**
@@ -71,37 +76,37 @@ public final class SafeChatHibernate {
         if (stdServiceRegistry != null) {
             stdServiceRegistry.close();
             StandardServiceRegistryBuilder.destroy(stdServiceRegistry);
-            sessionFactory.close();
-        }
-        if (getSessionFactory() != null) {
-            getSessionFactory().close();
+            if (sessionFactory != null) {
+                sessionFactory.close();
+            }
         }
     }
 
     /**
      * Setups a session factory if the hibernate mapping was valid.
      */
-    @SuppressWarnings("rawtypes")
     public void setupSessionFactory() throws RuntimeException {
         if (this.hibernateSQLMapping == null) {
             throw new RuntimeException("Tried to setup session factory with an invalid database!");
         } else {
-
             try {
-                StandardServiceRegistryBuilder registryBuilder = new StandardServiceRegistryBuilder();
+                final BootstrapServiceRegistryBuilder sigmaRegistryBuilder = new BootstrapServiceRegistryBuilder();
+                sigmaRegistryBuilder.applyClassLoader(this.pluginClassLoader);
 
-                Map settings = hibernateSQLMapping.generateProperties(dbConfig);
+                final StandardServiceRegistryBuilder registryBuilder = new StandardServiceRegistryBuilder(sigmaRegistryBuilder.build());
+                final Map<String, Object> settings = hibernateSQLMapping.generateProperties(dbConfig);
 
                 registryBuilder.applySettings(settings);
                 stdServiceRegistry = registryBuilder.build();
-                MetadataSources metadataSources = new MetadataSources(stdServiceRegistry).addAnnotatedClass(PlayerData.class);
-                Metadata metadata = metadataSources.getMetadataBuilder().build();
-                sessionFactory = metadata.getSessionFactoryBuilder().build();
 
-            } catch (HibernateException e) {
-                // shutdown();
-                e.printStackTrace();
+                final MetadataSources metadataSources = new MetadataSources(stdServiceRegistry).addAnnotatedClass(PlayerData.class);
+                final Metadata metadata = metadataSources.getMetadataBuilder().build();
+
+                sessionFactory = metadata.getSessionFactoryBuilder().build();
+            } catch (final HibernateException e) {
+                safeChat.getLogger().warning(e.getLocalizedMessage());
             }
+
         }
     }
 

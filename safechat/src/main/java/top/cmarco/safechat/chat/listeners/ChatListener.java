@@ -75,34 +75,38 @@ public final class ChatListener implements Listener {
         }
 
         String checkName = check.getName();
-        PlayerData playerData = playerDataManager.getPlayerData(chatData.getPlayer());
-        final int flagAmount;
-        if (playerData == null) {
-            flagAmount = 1;
-        } else {
 
-            Integer i = playerData.getFlagsMap().get(checkName);
-            if (i == null) {
+        playerDataManager.getPlayerData(chatData.getPlayer()).whenComplete((playerData1, err) -> {
+
+            if (err != null) {
+                safeChat.getLogger().warning(err.getLocalizedMessage());
+                return;
+            }
+
+            final int flagAmount;
+            if (playerData1 == null) {
                 flagAmount = 1;
             } else {
-                flagAmount = i;
+
+                Integer i = playerData1.getFlagsMap().get(checkName);
+                flagAmount = Objects.requireNonNullElse(i, 1);
             }
-        }
 
-        if (flagAmount % Math.abs(check.getPunishmentRequiredValue()) == 0) {
+            if (flagAmount % Math.abs(check.getPunishmentRequiredValue()) == 0) {
 
-            BukkitScheduler scheduler = safeChat.getServer().getScheduler();
+                BukkitScheduler scheduler = safeChat.getServer().getScheduler();
 
-            scheduler.runTask(safeChat, () -> {
+                scheduler.runTask(safeChat, () -> {
 
-                ChatPunishmentEvent punishmentEvent = new ChatPunishmentEvent(check);
-                safeChat.getServer().getPluginManager().callEvent(punishmentEvent);
+                    ChatPunishmentEvent punishmentEvent = new ChatPunishmentEvent(check);
+                    safeChat.getServer().getPluginManager().callEvent(punishmentEvent);
 
-                if (!punishmentEvent.isCancelled()) {
-                    dispatchCommands(check, chatData);
-                }
-            });
-        }
+                    if (!punishmentEvent.isCancelled()) {
+                        dispatchCommands(check, chatData);
+                    }
+                });
+            }
+        });
     }
 
     private void dispatchCommands(@NotNull Check check, @NotNull ChatData chatData) {

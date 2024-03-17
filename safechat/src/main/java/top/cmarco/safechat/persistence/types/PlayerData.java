@@ -18,9 +18,9 @@
 
 package top.cmarco.safechat.persistence.types;
 
+import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
 
-import javax.persistence.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
