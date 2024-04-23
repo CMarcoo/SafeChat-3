@@ -15,7 +15,7 @@ libraries:
   - "com.zaxxer:HikariCP:5.0.1"
   - "org.slf4j:slf4j-api:2.0.12"
   - "org.slf4j:slf4j-simple:2.0.12"
-  - "com.ibm.db2:jcc:11.5.9.0"
+  - "com.ibm.db2:jcc:11.5.8.0"
   - "info.debatty:java-string-similarity:2.0.0"
 api-version: "1.17"
 description: "Keep your chat safe!"

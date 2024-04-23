@@ -76,9 +76,6 @@ public final class SafeChatHibernate {
         if (stdServiceRegistry != null) {
             stdServiceRegistry.close();
             StandardServiceRegistryBuilder.destroy(stdServiceRegistry);
-            if (sessionFactory != null) {
-                sessionFactory.close();
-            }
         }
     }
 
